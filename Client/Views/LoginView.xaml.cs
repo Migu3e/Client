@@ -34,5 +34,13 @@ public partial class LoginView : Window
     private void btnLogin_Click(object sender, RoutedEventArgs e)
     {
 
+    
+    }
+
+    private void btnRegister_Click(object sender, RoutedEventArgs e)
+    {
+        var registerPage = new RegisterView();
+        registerPage.Show();
+        this.Close();
     }
 }
