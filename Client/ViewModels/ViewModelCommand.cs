@@ -19,6 +19,11 @@ namespace Client.ViewModels
             _executeAction = executeAction;
             _canExecuteAction = canExecuteAction;
         }
+        public ViewModelCommand(Action<object> executeAction)
+        {
+            _executeAction = executeAction;
+            _canExecuteAction = null;
+        }
 
         //event
         public event EventHandler CanExecuteChanged
