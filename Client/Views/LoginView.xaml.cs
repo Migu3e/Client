@@ -43,4 +43,10 @@ public partial class LoginView : Window
         registerPage.Show();
         this.Close();
     }
+    private void btnReset_Click(object sender, RoutedEventArgs e)
+    {
+        var resetPage = new ForgotPasswordView();
+        resetPage.Show();
+        this.Close();
+    }
 }

@@ -239,23 +239,29 @@
                         </Button.Template>
 
                     </Button>
+
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 Margin="0,15,0,0">
-                        <TextBlock Text="Forgot Password?"
+                        <TextBlock Text="Dont have account?"
                                    Foreground="DarkGray"
                                    FontSize="12"
                                    FontWeight="Medium"
                                    FontFamily="Montserrat"/>
-                        <TextBlock Text="Reset"
-                                   Foreground="White"
-                                   FontSize="12"
-                                   FontWeight="Medium"
-                                   FontFamily="Montserrat"
-                                   Cursor="Hand"
-                                   Margin="8,0,0,0"/>
+                        <Button x:Name="btnReset"
+                                    Foreground="White"
+                                    Background="Transparent"
+                                    Content="Reset"
+                                    BorderBrush="Transparent"
+                                    FontSize="12"
+                                    FontWeight="Medium"
+                                    FontFamily="Montserrat"
+                                    Cursor="Hand"
+                                    Margin="8,-2,0,0"
+                                    Click="btnReset_Click"/>
                     </StackPanel>
-                    
+
+
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 Margin="0,15,0,0">
