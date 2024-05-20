@@ -44,27 +44,34 @@ public partial class LoginView : Window
     {
         string username = txtUser.Text.Trim();
         string password = txtPass.Password;
-
-        var db = FirestoreHelper.database;
-        DocumentReference docRef = db.Collection("UserData").Document(username);
-        UserData data = docRef.GetSnapshotAsync().Result.ConvertTo<UserData>();
-        if (data != null)
+        if (username == "" || password == "")
         {
-            if(password == data.Password)
+            MessageBox.Show("FIELDS ARE EMPTY");
+        }
+
+        else
+        {
+            var db = FirestoreHelper.database;
+            DocumentReference docRef = db.Collection("UserData").Document(username);
+            UserData data = docRef.GetSnapshotAsync().Result.ConvertTo<UserData>();
+            if (data != null)
             {
-                MessageBox.Show("DONE");
-                var MainPage = new MainWindow();
-                MainPage.Show();
-                this.Close();
+                if (password == data.Password)
+                {
+                    MessageBox.Show("DONE");
+                    var MainPage = new MainWindow();
+                    MainPage.Show();
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("FAIL");
+                }
             }
             else
             {
                 MessageBox.Show("FAIL");
             }
-        }
-        else
-        {
-            MessageBox.Show("FAIL");
         }
 
     }

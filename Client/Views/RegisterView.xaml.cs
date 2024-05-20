@@ -59,15 +59,31 @@ namespace Client.Views
                 MessageBox.Show("EMAIL EXIST");
                 return; // If email exists, show message and return
             }
+            if (txtUser.Text == "" || txtPass.Password == "" || txtEmail.Text == "")
+            {
+                MessageBox.Show("FIELDS EMPTY");
+            }
 
-            // Email does not exist, proceed with registration
-            var data = GetWriteData();
-            DocumentReference docRef = db.Collection("UserData").Document(data.UserName);
-            await docRef.SetAsync(data); // Set data to Firestore asynchronously
-            MessageBox.Show("DONE");
-            var loginPage = new LoginView();
-            loginPage.Show();
-            this.Close();
+            else
+            {
+                if (!txtEmail.Text.Contains("@gmail.com"))
+                {
+                    MessageBox.Show("Email is not leagal");
+                }
+                else
+                {
+                    // Email does not exist, proceed with registration
+                    var data = GetWriteData();
+                    DocumentReference docRef = db.Collection("UserData").Document(data.UserName);
+                    await docRef.SetAsync(data); // Set data to Firestore asynchronously
+                    MessageBox.Show("DONE");
+                    var loginPage = new LoginView();
+                    loginPage.Show();
+                    this.Close();
+                }
+            }
+
+            
         }
 
 
