@@ -13,6 +13,10 @@ using System.Threading.Tasks;
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
+using ToastNotifications;
+using ToastNotifications.Position;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Messages;
 
 namespace Client.Views
 {
@@ -47,41 +51,46 @@ namespace Client.Views
         {
             var loginPage = new LoginView();
             loginPage.Show();
+            notifier.Dispose();
             this.Close();
 
         }
 
         private async void btnRegister_Click(object sender, RoutedEventArgs e)
         {
-            var db = FirestoreHelper.database;
-            if (await CheackIfAlreadyExistAsync()) // Check if email already exists
-            {
-                MessageBox.Show("EMAIL EXIST");
-                return; // If email exists, show message and return
-            }
             if (txtUser.Text == "" || txtPass.Password == "" || txtEmail.Text == "")
             {
-                MessageBox.Show("FIELDS EMPTY");
+                notifier.ShowError("Fields Are Empty");
             }
-
             else
             {
-                if (!txtEmail.Text.Contains("@gmail.com"))
+                var db = FirestoreHelper.database;
+                if (await CheackIfAlreadyExistAsync()) // Check if email already exists
                 {
-                    MessageBox.Show("Email is not leagal");
+                    return; // If email exists, show message and return
                 }
+
+
                 else
                 {
-                    // Email does not exist, proceed with registration
-                    var data = GetWriteData();
-                    DocumentReference docRef = db.Collection("UserData").Document(data.UserName);
-                    await docRef.SetAsync(data); // Set data to Firestore asynchronously
-                    MessageBox.Show("DONE");
-                    var loginPage = new LoginView();
-                    loginPage.Show();
-                    this.Close();
+                    if (!txtEmail.Text.Contains("@gmail.com"))
+                    {
+                        notifier.ShowError("Email Is Not Leagal");
+                    }
+                    else
+                    {
+                        // Email does not exist, proceed with registration
+                        var data = GetWriteData();
+                        DocumentReference docRef = db.Collection("UserData").Document(data.UserName);
+                        await docRef.SetAsync(data); // Set data to Firestore asynchronously
+                        var loginPage = new LoginView();
+                        loginPage.Show();
+                        notifier.Dispose();
+                        this.Close();
+                    }
                 }
             }
+           
 
             
         }
@@ -109,35 +118,51 @@ namespace Client.Views
             string email = txtEmail.Text.Trim();
             string username = txtUser.Text.Trim();
             var db = FirestoreHelper.database;
-            DocumentReference docRefEmail = db.Collection("UserData").Document(email);
-            DocumentReference docRefUser = db.Collection("UserData").Document(username);
 
+            // Check if username exists
+            DocumentReference docRefUser = db.Collection("UserData").Document(username);
 
             try
             {
                 DocumentSnapshot snapshotUser = await docRefUser.GetSnapshotAsync();
-                DocumentSnapshot snapshotEmail = await docRefEmail.GetSnapshotAsync();
-
                 if (snapshotUser.Exists)
                 {
+                    notifier.ShowError("Username exists");
+                    return true; // Username exists in the database
+                }
+
+                // Check if email exists
+                Query emailQuery = db.Collection("UserData").WhereEqualTo("Email", email);
+                QuerySnapshot emailQuerySnapshot = await emailQuery.GetSnapshotAsync();
+                if (emailQuerySnapshot.Documents.Count > 0)
+                {
+                    notifier.ShowError("Email exists");
                     return true; // Email exists in the database
                 }
-                if (snapshotEmail.Exists)
-                {
-                    return true; // Email & User exists in the database
-                }
-                else
-                {
-                    return false; // Email does not exist
-                }
+
+                return false; // Neither username nor email exists
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error checking email existence: " + ex.Message);
+                MessageBox.Show("Error checking user existence: " + ex.Message);
                 return false; // Error occurred while retrieving data
             }
         }
 
+        Notifier notifier = new Notifier(cfg =>
+        {
+            cfg.PositionProvider = new WindowPositionProvider(
+                parentWindow: Application.Current.MainWindow,
+                corner: Corner.TopRight,
+                offsetX: 10,
+                offsetY: 10);
+
+            cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                notificationLifetime: TimeSpan.FromSeconds(3),
+                maximumNotificationCount: MaximumNotificationCount.FromCount(5));
+
+            cfg.Dispatcher = Application.Current.Dispatcher;
+        });
 
 
 
