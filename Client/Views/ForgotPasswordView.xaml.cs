@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 namespace Client.Views
 {
     /// <summary>
-    /// Interaction logic for ForgotPasswordView.xaml
+    /// Interaction logic for ForgotPasswordView.xaml s
     /// </summary>
     public partial class ForgotPasswordView : Window
     {
