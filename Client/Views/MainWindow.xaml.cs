@@ -20,6 +20,7 @@ using System.Windows.Interop;
 using ToastNotifications.Position;
 using ToastNotifications.Lifetime;
 using ToastNotifications.Messages;
+using Client.ViewModels;
 
 namespace Client
 {
@@ -28,11 +29,18 @@ namespace Client
     /// </summary>
     public partial class MainWindow : Window
     {
+        public string CurrentUserDisplayName => CurrentUser.GetInstance().DisplayName();
+
         public MainWindow()
         {
             InitializeComponent();
             this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
+            DataContext = this;
+
         }
+
+
+        //size of window
 
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessage(IntPtr hWnd, int wMsg, int wParam, int lParam);
@@ -58,7 +66,6 @@ namespace Client
             if (this.WindowState == WindowState.Normal) 
             {
                 WindowState = WindowState.Maximized;
-                notifier.ShowError("user" + CurrentUser.GetInstance().GetUsername());
             }
             else
             {

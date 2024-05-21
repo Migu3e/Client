@@ -28,7 +28,7 @@ public class CurrentUser
         this.username = username;
     }
 
-    public string GetUsername()
+    public string DisplayName()
     {
         return username;
     }

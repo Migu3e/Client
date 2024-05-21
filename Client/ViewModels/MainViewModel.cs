@@ -1,23 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Client.Firestore;
-using Google.Cloud.Firestore;
+﻿using System.ComponentModel;
 
 namespace Client.ViewModels
 {
-    internal class MainViewModel
+    internal class MainViewModel : INotifyPropertyChanged
     {
-        private UserData _data;
+        private CurrentUser _currentUser;
 
-        public UserData CurrentUserData
+        public CurrentUser CurrentUser
         {
-            get
-            { return _data; }
-            set { _data = value; }
+            get { return _currentUser; }
+            set
+            {
+                _currentUser = value;
+                OnPropertyChanged(nameof(CurrentUser));
+            }
         }
 
+        // Constructor
+        public MainViewModel()
+        {
+            // Get the singleton instance of CurrentUser
+            CurrentUser = CurrentUser.GetInstance();
+
+            // Set username and email (replace "JohnDoe" and "john@example.com" with actual data)
+            CurrentUser.SetUsername("JohnDoe");
+            CurrentUser.SetEmail("john@example.com");
+        }
+
+        // INotifyPropertyChanged implementation
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }
