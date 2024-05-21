@@ -22,9 +22,9 @@
                     Opacity="0.94">
             <Border.BorderBrush>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="#00e1ff" Offset="0"/>
-                    <GradientStop Color="#00aeff" Offset="0.65"/>
-                    <GradientStop Color="#3c00b3" Offset="1"/>
+                    <GradientStop Color="{StaticResource winBorderColor1}" Offset="0"/>
+                    <GradientStop Color="{StaticResource winBorderColor2}" Offset="0.65"/>
+                    <GradientStop Color="{StaticResource winBorderColor3}" Offset="1"/>
                 </LinearGradientBrush>
             </Border.BorderBrush>
 

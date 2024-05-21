@@ -10,6 +10,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Styles\ButtonStyle.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Styles\UIColor.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\ForgotPasswordView.xaml">
       <SubType>Designer</SubType>
     </Page>
