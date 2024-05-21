@@ -11,36 +11,37 @@ namespace Client.ViewModels
     public class ViewModelCommand : ICommand
     {
         //feilds
-        private readonly Action<object> _executeAction;
-        private readonly Predicate<object> _canExecuteAction;
+        private  Action<object> execute;
+        private Func<object,bool> canExecute;
         //Constructors
-        public ViewModelCommand(Action<object> executeAction, Predicate<object> canExecuteAction)
-        {
-            _executeAction = executeAction;
-            _canExecuteAction = canExecuteAction;
-        }
-        public ViewModelCommand(Action<object> executeAction)
-        {
-            _executeAction = executeAction;
-            _canExecuteAction = null;
-        }
-
         //event
         public event EventHandler CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value;}
+            add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
+        public ViewModelCommand(Action<object> executeAction, Predicate<object> canExecuteAction)
+        {
+            execute = executeAction;
+            canExecute = canExecuteAction;
+        }
+        public ViewModelCommand(Action<object> executeAction)
+        {
+            execute = executeAction;
+            canExecute = null;
+        }
+
+
 
         //methods
         public bool CanExecute(object parameter)
         {
-            return _canExecuteAction == null ? true : _canExecuteAction(parameter);
+            return canExecute == null ? true : canExecute(parameter);
         }
 
         public void Execute(object? parameter)
         {
-            _executeAction(parameter);
+            execute(parameter);
         }
 
     }
