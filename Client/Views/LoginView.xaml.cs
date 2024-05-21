@@ -13,6 +13,11 @@ using System.Threading.Tasks;
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
+using ToastNotifications;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Position;
+using ToastNotifications.Messages;
+/* * */
 namespace Client.Views;
 
 public partial class LoginView : Window
@@ -46,11 +51,12 @@ public partial class LoginView : Window
         string password = txtPass.Password;
         if (username == "" || password == "")
         {
-            MessageBox.Show("FIELDS ARE EMPTY");
+            notifier.ShowError("Error No Fields");
         }
 
         else
         {
+            
             var db = FirestoreHelper.database;
             DocumentReference docRef = db.Collection("UserData").Document(username);
             UserData data = docRef.GetSnapshotAsync().Result.ConvertTo<UserData>();
@@ -58,19 +64,18 @@ public partial class LoginView : Window
             {
                 if (password == data.Password)
                 {
-                    MessageBox.Show("DONE");
                     var MainPage = new MainWindow();
                     MainPage.Show();
                     this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("FAIL");
+                    notifier.ShowError("Password Dosent Much");
                 }
             }
             else
             {
-                MessageBox.Show("FAIL");
+                notifier.ShowError("Username Dosent Exist");
             }
         }
 
@@ -89,4 +94,20 @@ public partial class LoginView : Window
         resetPage.Show();
         this.Close();
     }
+
+    // ToastNotification Copy
+    Notifier notifier = new Notifier(cfg =>
+    {
+        cfg.PositionProvider = new WindowPositionProvider(
+            parentWindow: Application.Current.MainWindow,
+            corner: Corner.TopRight,
+            offsetX: 10,
+            offsetY: 10);
+
+        cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+            notificationLifetime: TimeSpan.FromSeconds(3),
+            maximumNotificationCount: MaximumNotificationCount.FromCount(5));
+
+        cfg.Dispatcher = Application.Current.Dispatcher;
+    });
 }
