@@ -17,6 +17,7 @@ using ToastNotifications;
 using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using ToastNotifications.Messages;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 /* * */
 namespace Client.Views;
 
@@ -48,6 +49,7 @@ public partial class LoginView : Window
     private void btnLogin_Click(object sender, RoutedEventArgs e)
     {
         string username = txtUser.Text.Trim();
+
         string password = txtPass.Password;
         if (username == "" || password == "")
         {
@@ -64,6 +66,27 @@ public partial class LoginView : Window
             {
                 if (password == data.Password)
                 {
+
+                    CurrentUser currentUser = CurrentUser.GetInstance();
+                    currentUser.SetUsername(username);
+
+                    // Fetch the email from Firebase database based on the username
+                    // For example:
+                    var emaildb = FirestoreHelper.database;
+                    DocumentReference docRefEmail = emaildb.Collection("UserData").Document(username);
+                    UserData dataEmail = docRef.GetSnapshotAsync().Result.ConvertTo<UserData>();
+
+                    if (data != null)
+                    {
+                        string email = data.Email; // Assuming UserData class has an Email property
+                        currentUser.SetEmail(email);
+                    }
+                    else
+                    {
+                        notifier.ShowError("Failed to fetch user data.");
+                        return;
+                    }
+
                     var MainPage = new MainWindow();
                     MainPage.Show();
                     this.Close();
