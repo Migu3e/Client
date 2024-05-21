@@ -1,4 +1,4 @@
-﻿<Window x:Class="Client.MainWindow"
+﻿<Window  x:Class="Client.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -12,6 +12,11 @@
         WindowStyle="None"
         Background="Transparent"
         AllowsTransparency="True">
+
+    <Window.DataContext>
+        <viewModel:MainViewModel/>
+    </Window.DataContext>
+    
     <Border CornerRadius="10"
             BorderThickness="4">
         <Border.BorderBrush>
@@ -46,7 +51,7 @@
                                 Margin="15,25,0,40">
 
                         <Image Source="/Images/Logo.png" Height="30"/>
-                        <TextBlock Text="RJ CODE"
+                        <TextBlock Text="Chat Proj"
                                    Foreground="{StaticResource titleColor2}"
                                    FontSize="20"
                                    FontFamily="Montserrat"
@@ -192,8 +197,8 @@
                                               Height="12" Width="12"
                                               Style="{StaticResource iconButtonIcon}"/>
                             </Button>
-                            <TextBlock Text="{Binding CurrentUserDisplayName}"
-                                       Foreground="{StaticResource titleColor3}"
+                            <TextBlock Text="{Binding CurrentUserDisplayName, RelativeSource={RelativeSource AncestorType=Window}}" 
+                            Foreground="{StaticResource titleColor3}"
                                        FontFamily="Montserrat"
                                        FontSize="12"
                                        VerticalAlignment="Center"/>
@@ -206,22 +211,54 @@
                                 </Ellipse.Fill>
                             </Ellipse>
                             <Button Style="{StaticResource iconButton}"
-                                    Tag="{StaticResource color4}">
-                                <fa:IconImage Icon="Envelope" Style="{StaticResource iconButtonIcon}"/>
+                                    Tag="{StaticResource color4}"
+                                    Command="{Binding ConnectToServerCommand}">
+                                <fa:IconImage Icon="StarOfDavid" Style="{StaticResource iconButtonIcon}"/>
                             </Button>
                             <Button Style="{StaticResource iconButton}"
                                     Tag="{StaticResource color5}">
                                 <fa:IconImage Icon="Bell" Style="{StaticResource iconButtonIcon}"/>
                             </Button>
                         </StackPanel>
+                        
 
                     </Grid>
+   
 
                 </Grid>
                 
                 
+                
+                
+                
             </Border>
+            <StackPanel Grid.Column="1">
+                <TextBox x:Name="txtSentcommand"
+                            FontSize="13"
+                            FontWeight="Medium"
+                            FontFamily="Montserrat"
+                            Foreground="White"
+                            CaretBrush="AliceBlue"
+                            BorderBrush="Aquamarine"
+                            BorderThickness="1,1,1,1"
+                            Height="28"
+                            VerticalContentAlignment="Center"
+                            Margin="0,410,0,0"
+                            Padding="30,0,0,0">    
+
+                    <TextBox.Background>
+                        <ImageBrush ImageSource ="/Images/IconUserName.png"
+                                    Stretch="Uniform"
+                                    AlignmentX="Left"
+                                    />
+
+                    </TextBox.Background>
+                </TextBox>
+
+
+            </StackPanel>
         </Grid>
+        
         
 
 

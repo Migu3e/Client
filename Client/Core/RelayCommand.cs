@@ -1,3 +1,4 @@
+using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,13 +7,13 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 
 
-namespace Client.ViewModels
+namespace Client.Core
 {
-    public class ViewModelCommand : ICommand
+    public class RelayCommand : ICommand
     {
         //feilds
-        private  Action<object> execute;
-        private Func<object,bool> canExecute;
+        private Action<object> execute;
+        private Func<object, bool> canExecute;
         //Constructors
         //event
         public event EventHandler CanExecuteChanged
@@ -20,28 +21,21 @@ namespace Client.ViewModels
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
-        public ViewModelCommand(Action<object> executeAction, Predicate<object> canExecuteAction)
+        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
         {
-            execute = executeAction;
-            canExecute = canExecuteAction;
+            this.execute = execute;
+            this.canExecute = canExecute;
         }
-        public ViewModelCommand(Action<object> executeAction)
-        {
-            execute = executeAction;
-            canExecute = null;
-        }
-
-
 
         //methods
         public bool CanExecute(object parameter)
         {
-            return canExecute == null ? true : canExecute(parameter);
+            return this.canExecute == null || this.canExecute(parameter);
         }
 
-        public void Execute(object? parameter)
+        public void Execute(object parameter)
         {
-            execute(parameter);
+            this.execute(parameter);
         }
 
     }

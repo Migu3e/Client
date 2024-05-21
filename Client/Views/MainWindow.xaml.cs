@@ -35,7 +35,7 @@ namespace Client
         {
             InitializeComponent();
             this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
-            DataContext = this;
+            DataContext = new MainViewModel();  // Ensure DataContext is set here
 
         }
 
